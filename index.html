@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div id="container"></div>
+
+    <script>
+      const apiLink = "http://localhost:3000/getPosts";
+      const container = document.getElementById("container");
+
+      const ajaxRequest = new XMLHttpRequest();
+      ajaxRequest.open("GET", apiLink);
+      ajaxRequest.onload = () => {
+        let dataRaw = JSON.parse(ajaxRequest.responseText);
+        renderHTML(dataRaw);
+      };
+      ajaxRequest.onerror = () => {
+        alert(`Error! Cannot get data from ${apiLink}`);
+      };
+      ajaxRequest.send();
+
+      const renderHTML = (db) => {
+        let htmlString = "";
+        let commentString = "COMMENTS: ";
+
+        db.map((data) => {
+          htmlString += `<article id = "${data.id}" >
+                  <header>
+                      <h2>
+                          ${data.title}
+                      </h2>
+                  </header>
+                  <p>
+                      ${data.body}
+                  </p>
+              </article>
+              <footer>${commentString}</footer>
+              `;
+        });
+
+        container.insertAdjacentHTML("beforeend", htmlString);
+
+        // Question 6 Rendering Comments
+        // db.map((data) => {
+        //   let commentLink = `https://jsonplaceholder.typicode.com/comments?postId=${data.userId}&id=${data.id}`;
+        //   const newRequest = new XMLHttpRequest();
+        //   newRequest.open("GET", commentLink);
+        //   newRequest.onload = () => {
+        //     let commentData = JSON.parse(ajaxRequest.responseText);
+        //     renderComment(commentData);
+        //   };
+        //   newRequest.send();
+
+        //   const renderComment = (comments) => {
+        //     comments.map((comment) => {
+        //       commentString += `<p> Comment: ${comment.body} </p>`;
+        //     });
+        //   };
+        // });
+      };
+    </script>
+  </body>
+</html>
